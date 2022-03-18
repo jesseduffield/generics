@@ -358,3 +358,15 @@ func TestIsEmpty(t *testing.T) {
 		t.Errorf("IsEmpty() = %v, expected %v", list.IsEmpty(), false)
 	}
 }
+
+func TestLen(t *testing.T) {
+	list := NewFromSlice([]int{})
+	if list.Len() != 0 {
+		t.Errorf("Len() = %v, expected %v", list.Len(), 0)
+	}
+
+	list = NewFromSlice([]int{1})
+	if list.Len() != 1 {
+		t.Errorf("Len() = %v, expected %v", list.Len(), 1)
+	}
+}

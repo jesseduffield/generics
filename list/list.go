@@ -111,3 +111,7 @@ func (l *List[T]) Reverse() *List[T] {
 func (l *List[T]) IsEmpty() bool {
 	return len(l.slice) == 0
 }
+
+func (l *List[T]) Len() int {
+	return len(l.slice)
+}
