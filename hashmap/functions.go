@@ -1,7 +1,7 @@
 package hashmap
 
 func Keys[Key comparable, Value any](m map[Key]Value) []Key {
-	keys := make([]Key, len(m))
+	keys := make([]Key, 0, len(m))
 	for key := range m {
 		keys = append(keys, key)
 	}
@@ -9,7 +9,7 @@ func Keys[Key comparable, Value any](m map[Key]Value) []Key {
 }
 
 func Values[Key comparable, Value any](m map[Key]Value) []Value {
-	values := make([]Value, len(m))
+	values := make([]Value, 0, len(m))
 	for _, value := range m {
 		values = append(values, value)
 	}

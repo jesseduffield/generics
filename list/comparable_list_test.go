@@ -1,6 +1,8 @@
 package list
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestEqual(t *testing.T) {
 	tests := []struct {
@@ -40,7 +42,8 @@ func TestCompact(t *testing.T) {
 	}
 	for _, test := range tests {
 		list := NewComparableFromSlice(test.slice)
-		expectSlice(t, test.expected, list.Compact().ToSlice())
+		list.Compact()
+		expectSlice(t, test.expected, list.ToSlice())
 	}
 }
 
@@ -60,8 +63,8 @@ func TestIndex(t *testing.T) {
 	for _, test := range tests {
 		list := NewComparableFromSlice(test.slice)
 
-		if list.IndexOf(test.value) != test.expected {
-			t.Errorf("Index(%v, %v) = %v, expected %v", test.slice, test.value, list.IndexOf(test.value), test.expected)
+		if list.Index(test.value) != test.expected {
+			t.Errorf("Index(%v, %v) = %v, expected %v", test.slice, test.value, list.Index(test.value), test.expected)
 		}
 	}
 }

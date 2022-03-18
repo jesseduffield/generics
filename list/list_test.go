@@ -16,39 +16,37 @@ func TestInsert(t *testing.T) {
 	tests := []struct {
 		startSlice []int
 		index      int
-		value      int
+		values     []int
 		endSlice   []int
 	}{
-		{[]int{}, 0, 1, []int{1}},
-		{[]int{1}, 0, 2, []int{2, 1}},
-		{[]int{1, 2}, 1, 3, []int{1, 3, 2}},
-		{[]int{1, 2}, 2, 3, []int{1, 2, 3}},
+		{[]int{}, 0, []int{1}, []int{1}},
+		{[]int{1}, 0, []int{2}, []int{2, 1}},
+		{[]int{1, 2}, 1, []int{3}, []int{1, 3, 2}},
+		{[]int{1, 2}, 2, []int{3}, []int{1, 2, 3}},
+		{[]int{1, 2}, 2, []int{3, 4}, []int{1, 2, 3, 4}},
+		{[]int{1, 2}, 1, []int{3, 4}, []int{1, 3, 4, 2}},
 	}
 	for _, test := range tests {
 		list := NewFromSlice(test.startSlice)
-		err := list.Insert(test.index, test.value)
-		expectNilError(t, err)
+		list.Insert(test.index, test.values...)
 		expectSlice(t, test.endSlice, list.ToSlice())
 	}
 
-	errorTests := []struct {
-		startSlice         []int
-		index              int
-		value              int
-		expectedErrMessage string
+	panicTests := []struct {
+		startSlice []int
+		index      int
+		value      int
 	}{
-		{[]int{}, 1, 1, "Cannot insert: index 1 out of bounds for list of length 0"},
-		{[]int{}, 2, 1, "Cannot insert: index 2 out of bounds for list of length 0"},
-		{[]int{1}, 2, 1, "Cannot insert: index 2 out of bounds for list of length 1"},
-		{[]int{1}, -1, 1, "Cannot insert: index -1 is negative"},
+		{[]int{}, 1, 1},
+		{[]int{}, 2, 1},
+		{[]int{1}, 2, 1},
+		{[]int{1}, -1, 1},
 	}
-	for _, test := range errorTests {
+	for _, test := range panicTests {
 		t.Run("", func(t *testing.T) {
-			originalSlice := cloneSlice(test.startSlice)
+			defer expectPanic(t)
 			list := NewFromSlice(test.startSlice)
-			err := list.Insert(test.index, test.value)
-			expectError(t, err, test.expectedErrMessage)
-			expectSlice(t, originalSlice, list.ToSlice())
+			list.Insert(test.index, test.value)
 		})
 	}
 }
@@ -65,28 +63,24 @@ func TestRemove(t *testing.T) {
 	}
 	for _, test := range tests {
 		list := NewFromSlice(test.startSlice)
-		err := list.Remove(test.index)
+		list.Remove(test.index)
 		expectSlice(t, test.endSlice, list.ToSlice())
-		expectNilError(t, err)
 	}
 
-	errorTests := []struct {
-		startSlice         []int
-		index              int
-		expectedErrMessage string
+	panicTests := []struct {
+		startSlice []int
+		index      int
 	}{
-		{[]int{}, 0, "Cannot remove: index 0 out of bounds for list of length 0"},
-		{[]int{}, 1, "Cannot remove: index 1 out of bounds for list of length 0"},
-		{[]int{1}, 1, "Cannot remove: index 1 out of bounds for list of length 1"},
-		{[]int{1}, -1, "Cannot remove: index -1 is negative"},
+		{[]int{}, 0},
+		{[]int{}, 1},
+		{[]int{1}, 1},
+		{[]int{1}, -1},
 	}
-	for _, test := range errorTests {
+	for _, test := range panicTests {
 		t.Run("", func(t *testing.T) {
-			originalSlice := cloneSlice(test.startSlice)
+			defer expectPanic(t)
 			list := NewFromSlice(test.startSlice)
-			err := list.Remove(test.index)
-			expectError(t, err, test.expectedErrMessage)
-			expectSlice(t, originalSlice, list.ToSlice())
+			list.Remove(test.index)
 		})
 	}
 }
@@ -106,19 +100,16 @@ func TestPop(t *testing.T) {
 		expectSlice(t, test.endSlice, list.ToSlice())
 	}
 
-	errorTests := []struct {
-		startSlice         []int
-		expectedErrMessage string
+	panicTests := []struct {
+		startSlice []int
 	}{
-		{[]int{}, "Cannot pop: list is empty"},
+		{[]int{}},
 	}
-	for _, test := range errorTests {
+	for _, test := range panicTests {
 		t.Run("", func(t *testing.T) {
-			originalSlice := cloneSlice(test.startSlice)
+			defer expectPanic(t)
 			list := NewFromSlice(test.startSlice)
-			err := list.Pop()
-			expectError(t, err, test.expectedErrMessage)
-			expectSlice(t, originalSlice, list.ToSlice())
+			list.Pop()
 		})
 	}
 }
@@ -278,9 +269,42 @@ func TestEvery(t *testing.T) {
 		list := NewFromSlice(test.startSlice)
 		if list.Every(test.testFunc) != test.expected {
 			t.Errorf("Every(%v) = %v, expected %v",
-				test.startSlice, list.Some(test.testFunc), test.expected,
+				test.startSlice, list.Every(test.testFunc), test.expected,
 			)
 		}
+	}
+}
+
+func TestReverse(t *testing.T) {
+	tests := []struct {
+		startSlice []int
+		expected   []int
+	}{
+		{[]int{}, []int{}},
+		{[]int{1}, []int{1}},
+		{[]int{1, 2}, []int{2, 1}},
+		{[]int{1, 2, 3}, []int{3, 2, 1}},
+	}
+	for _, test := range tests {
+		list := NewFromSlice(test.startSlice)
+		expectSlice(t, test.expected, list.Reverse().ToSlice())
+	}
+}
+
+func TestReverseInPlace(t *testing.T) {
+	tests := []struct {
+		startSlice []int
+		expected   []int
+	}{
+		{[]int{}, []int{}},
+		{[]int{1}, []int{1}},
+		{[]int{1, 2}, []int{2, 1}},
+		{[]int{1, 2, 3}, []int{3, 2, 1}},
+	}
+	for _, test := range tests {
+		list := NewFromSlice(test.startSlice)
+		list.ReverseInPlace()
+		expectSlice(t, test.expected, list.ToSlice())
 	}
 }
 
@@ -302,4 +326,16 @@ func TestFilterMap(t *testing.T) {
 		Map(func(value int) int { return value * 2 })
 
 	expectSlice(t, []int{4, 8}, result.ToSlice())
+}
+
+func TestIsEmpty(t *testing.T) {
+	list := NewFromSlice([]int{})
+	if !list.IsEmpty() {
+		t.Errorf("IsEmpty() = %v, expected %v", list.IsEmpty(), true)
+	}
+
+	list = NewFromSlice([]int{1})
+	if list.IsEmpty() {
+		t.Errorf("IsEmpty() = %v, expected %v", list.IsEmpty(), false)
+	}
 }
