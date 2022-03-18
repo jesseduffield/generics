@@ -5,7 +5,7 @@ import (
 )
 
 func TestPush(t *testing.T) {
-	list := NewList[int]()
+	list := New[int]()
 	list.Push(1)
 	list.Push(2)
 	slice := list.ToSlice()
@@ -25,7 +25,7 @@ func TestInsert(t *testing.T) {
 		{[]int{1, 2}, 2, 3, []int{1, 2, 3}},
 	}
 	for _, test := range tests {
-		list := NewListFromSlice(test.startSlice)
+		list := NewFromSlice(test.startSlice)
 		err := list.Insert(test.index, test.value)
 		expectNilError(t, err)
 		expectSlice(t, test.endSlice, list.ToSlice())
@@ -45,7 +45,7 @@ func TestInsert(t *testing.T) {
 	for _, test := range errorTests {
 		t.Run("", func(t *testing.T) {
 			originalSlice := cloneSlice(test.startSlice)
-			list := NewListFromSlice(test.startSlice)
+			list := NewFromSlice(test.startSlice)
 			err := list.Insert(test.index, test.value)
 			expectError(t, err, test.expectedErrMessage)
 			expectSlice(t, originalSlice, list.ToSlice())
@@ -64,7 +64,7 @@ func TestRemove(t *testing.T) {
 		{[]int{1, 2}, 1, []int{1}},
 	}
 	for _, test := range tests {
-		list := NewListFromSlice(test.startSlice)
+		list := NewFromSlice(test.startSlice)
 		err := list.Remove(test.index)
 		expectSlice(t, test.endSlice, list.ToSlice())
 		expectNilError(t, err)
@@ -83,7 +83,7 @@ func TestRemove(t *testing.T) {
 	for _, test := range errorTests {
 		t.Run("", func(t *testing.T) {
 			originalSlice := cloneSlice(test.startSlice)
-			list := NewListFromSlice(test.startSlice)
+			list := NewFromSlice(test.startSlice)
 			err := list.Remove(test.index)
 			expectError(t, err, test.expectedErrMessage)
 			expectSlice(t, originalSlice, list.ToSlice())
@@ -101,7 +101,7 @@ func TestPop(t *testing.T) {
 		{[]int{1, 2, 3}, []int{1, 2}},
 	}
 	for _, test := range tests {
-		list := NewListFromSlice(test.startSlice)
+		list := NewFromSlice(test.startSlice)
 		list.Pop()
 		expectSlice(t, test.endSlice, list.ToSlice())
 	}
@@ -115,7 +115,7 @@ func TestPop(t *testing.T) {
 	for _, test := range errorTests {
 		t.Run("", func(t *testing.T) {
 			originalSlice := cloneSlice(test.startSlice)
-			list := NewListFromSlice(test.startSlice)
+			list := NewFromSlice(test.startSlice)
 			err := list.Pop()
 			expectError(t, err, test.expectedErrMessage)
 			expectSlice(t, originalSlice, list.ToSlice())
@@ -137,7 +137,7 @@ func TestFilter(t *testing.T) {
 	}
 	for _, test := range tests {
 		originalSlice := cloneSlice(test.startSlice)
-		list := NewListFromSlice(test.startSlice)
+		list := NewFromSlice(test.startSlice)
 		expectSlice(t, test.endSlice, list.Filter(test.testFunc).ToSlice())
 		expectSlice(t, originalSlice, list.ToSlice())
 	}
@@ -157,7 +157,7 @@ func TestFilterInPlace(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		list := NewListFromSlice(test.startSlice)
+		list := NewFromSlice(test.startSlice)
 		list.FilterInPlace(test.testFunc)
 		expectSlice(t, test.endSlice, list.ToSlice())
 	}
@@ -179,7 +179,7 @@ func TestMap(t *testing.T) {
 
 	for _, test := range tests {
 		originalSlice := cloneSlice(test.startSlice)
-		list := NewListFromSlice(test.startSlice)
+		list := NewFromSlice(test.startSlice)
 		expectSlice(t, test.endSlice, list.Map(test.mapFunc).ToSlice())
 		expectSlice(t, originalSlice, list.ToSlice())
 	}
@@ -199,7 +199,7 @@ func TestMapInPlace(t *testing.T) {
 		{[]int{1, 2, 3, 4}, double, []int{2, 4, 6, 8}},
 	}
 	for _, test := range tests {
-		list := NewListFromSlice(test.startSlice)
+		list := NewFromSlice(test.startSlice)
 		list.MapInPlace(test.mapFunc)
 		expectSlice(t, test.endSlice, list.ToSlice())
 	}
@@ -211,12 +211,12 @@ func TestConcat(t *testing.T) {
 		other      *List[int]
 		endSlice   []int
 	}{
-		{[]int{}, NewListFromSlice([]int{}), []int{}},
-		{[]int{1}, NewListFromSlice([]int{2}), []int{1, 2}},
-		{[]int{1, 2}, NewListFromSlice([]int{3, 4}), []int{1, 2, 3, 4}},
+		{[]int{}, NewFromSlice([]int{}), []int{}},
+		{[]int{1}, NewFromSlice([]int{2}), []int{1, 2}},
+		{[]int{1, 2}, NewFromSlice([]int{3, 4}), []int{1, 2, 3, 4}},
 	}
 	for _, test := range tests {
-		list := NewListFromSlice(test.startSlice)
+		list := NewFromSlice(test.startSlice)
 		list.Concat(test.other)
 		expectSlice(t, test.endSlice, list.ToSlice())
 	}
@@ -233,7 +233,7 @@ func TestConcatSlice(t *testing.T) {
 		{[]int{1, 2}, []int{3, 4}, []int{1, 2, 3, 4}},
 	}
 	for _, test := range tests {
-		list := NewListFromSlice(test.startSlice)
+		list := NewFromSlice(test.startSlice)
 		list.ConcatSlice(test.other)
 		expectSlice(t, test.endSlice, list.ToSlice())
 	}
@@ -252,7 +252,7 @@ func TestSome(t *testing.T) {
 		{[]int{1, 2}, even, true},
 	}
 	for _, test := range tests {
-		list := NewListFromSlice(test.startSlice)
+		list := NewFromSlice(test.startSlice)
 		if list.Some(test.testFunc) != test.expected {
 			t.Errorf("Some(%v) = %v, expected %v",
 				test.startSlice, list.Some(test.testFunc), test.expected,
@@ -275,7 +275,7 @@ func TestEvery(t *testing.T) {
 		{[]int{2, 2}, even, true},
 	}
 	for _, test := range tests {
-		list := NewListFromSlice(test.startSlice)
+		list := NewFromSlice(test.startSlice)
 		if list.Every(test.testFunc) != test.expected {
 			t.Errorf("Every(%v) = %v, expected %v",
 				test.startSlice, list.Some(test.testFunc), test.expected,
@@ -285,7 +285,7 @@ func TestEvery(t *testing.T) {
 }
 
 func TestClone(t *testing.T) {
-	list := NewListFromSlice([]int{1, 2, 3})
+	list := NewFromSlice([]int{1, 2, 3})
 	clone := list.Clone()
 	expectSlice(t, []int{1, 2, 3}, clone.ToSlice())
 
@@ -296,7 +296,7 @@ func TestClone(t *testing.T) {
 }
 
 func TestFilterMap(t *testing.T) {
-	list := NewListFromSlice([]int{1, 2, 3, 4})
+	list := NewFromSlice([]int{1, 2, 3, 4})
 	result := list.
 		Filter(func(value int) bool { return value%2 == 0 }).
 		Map(func(value int) int { return value * 2 })

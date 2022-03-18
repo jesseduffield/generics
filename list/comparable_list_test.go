@@ -16,8 +16,8 @@ func TestEqual(t *testing.T) {
 		{[]int{1, 2, 3}, []int{1, 2}, false},
 	}
 	for _, test := range tests {
-		first := NewComparableListFromSlice(test.first)
-		second := NewComparableListFromSlice(test.second)
+		first := NewComparableFromSlice(test.first)
+		second := NewComparableFromSlice(test.second)
 		if first.Equal(second) != test.expected {
 			t.Errorf("Equal(%v, %v) = %v, expected %v",
 				test.first, test.second, first.Equal(second), test.expected,
@@ -39,7 +39,7 @@ func TestCompact(t *testing.T) {
 		{[]int{1, 1, 1}, []int{1}},
 	}
 	for _, test := range tests {
-		list := NewComparableListFromSlice(test.slice)
+		list := NewComparableFromSlice(test.slice)
 		expectSlice(t, test.expected, list.Compact().ToSlice())
 	}
 }
@@ -58,7 +58,7 @@ func TestIndex(t *testing.T) {
 		{[]int{1, 2, 3}, 3, 2},
 	}
 	for _, test := range tests {
-		list := NewComparableListFromSlice(test.slice)
+		list := NewComparableFromSlice(test.slice)
 
 		if list.IndexOf(test.value) != test.expected {
 			t.Errorf("Index(%v, %v) = %v, expected %v", test.slice, test.value, list.IndexOf(test.value), test.expected)
@@ -80,7 +80,7 @@ func TestIndexFunc(t *testing.T) {
 		{[]int{1, 2, 3}, func(value int) bool { return value == 3 }, 2},
 	}
 	for _, test := range tests {
-		list := NewComparableListFromSlice(test.slice)
+		list := NewComparableFromSlice(test.slice)
 
 		if list.IndexFunc(test.f) != test.expected {
 			t.Errorf("IndexFunc(%v, func) = %v, expected %v", test.slice, list.IndexFunc(test.f), test.expected)
@@ -102,7 +102,7 @@ func TestContains(t *testing.T) {
 		{[]int{1, 2, 3}, 3, true},
 	}
 	for _, test := range tests {
-		list := NewComparableListFromSlice(test.slice)
+		list := NewComparableFromSlice(test.slice)
 
 		if list.Contains(test.value) != test.expected {
 			t.Errorf("Contains(%v, %v) = %v, expected %v", test.slice, test.value, list.Contains(test.value), test.expected)
@@ -124,7 +124,7 @@ func TestContainsFunc(t *testing.T) {
 		{[]int{1, 2, 3}, func(value int) bool { return value == 3 }, true},
 	}
 	for _, test := range tests {
-		list := NewComparableListFromSlice(test.slice)
+		list := NewComparableFromSlice(test.slice)
 
 		if list.ContainsFunc(test.f) != test.expected {
 			t.Errorf("ContainsFunc(%v, func) = %v, expected %v", test.slice, list.ContainsFunc(test.f), test.expected)

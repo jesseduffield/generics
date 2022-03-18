@@ -8,11 +8,11 @@ type List[T any] struct {
 	slice []T
 }
 
-func NewList[T any]() *List[T] {
+func New[T any]() *List[T] {
 	return &List[T]{}
 }
 
-func NewListFromSlice[T any](slice []T) *List[T] {
+func NewFromSlice[T any](slice []T) *List[T] {
 	return &List[T]{slice: slice}
 }
 
@@ -135,7 +135,7 @@ func (l *List[T]) Filter(test func(value T) bool) *List[T] {
 		}
 	}
 
-	return NewListFromSlice(result)
+	return NewFromSlice(result)
 }
 
 func (l *List[T]) Map(f func(value T) T) *List[T] {
@@ -144,7 +144,7 @@ func (l *List[T]) Map(f func(value T) T) *List[T] {
 		result = append(result, f(element))
 	}
 
-	return NewListFromSlice(result)
+	return NewFromSlice(result)
 }
 
 func (l *List[T]) Clone() *List[T] {
@@ -153,7 +153,7 @@ func (l *List[T]) Clone() *List[T] {
 		newSlice = append(newSlice, value)
 	}
 
-	return NewListFromSlice(newSlice)
+	return NewFromSlice(newSlice)
 }
 
 func (l *List[T]) Some(test func(value T) bool) bool {
@@ -194,5 +194,5 @@ func (l *List[T]) Reverse() *List[T] {
 	for i, j := 0, len(l.slice)-1; i < j; i, j = i+1, j-1 {
 		result[i], result[j] = l.slice[j], l.slice[i]
 	}
-	return NewListFromSlice(result)
+	return NewFromSlice(result)
 }

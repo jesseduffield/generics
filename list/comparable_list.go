@@ -6,12 +6,12 @@ type ComparableList[T comparable] struct {
 	*List[T]
 }
 
-func NewComparableList[T comparable]() *ComparableList[T] {
-	return &ComparableList[T]{List: NewList[T]()}
+func NewComparable[T comparable]() *ComparableList[T] {
+	return &ComparableList[T]{List: New[T]()}
 }
 
-func NewComparableListFromSlice[T comparable](slice []T) *ComparableList[T] {
-	return &ComparableList[T]{List: NewListFromSlice(slice)}
+func NewComparableFromSlice[T comparable](slice []T) *ComparableList[T] {
+	return &ComparableList[T]{List: NewFromSlice(slice)}
 }
 
 func (l *ComparableList[T]) Equal(other *ComparableList[T]) bool {
@@ -73,5 +73,5 @@ func (l *ComparableList[T]) Sort(test func(a T, b T) bool) *ComparableList[T] {
 	sort.Slice(result, func(i, j int) bool {
 		return test(result[i], result[j])
 	})
-	return NewComparableListFromSlice(result)
+	return NewComparableFromSlice(result)
 }
