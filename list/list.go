@@ -30,16 +30,16 @@ func (l *List[T]) Pop() {
 	l.slice = l.slice[0 : len(l.slice)-1]
 }
 
-func (l *List[T]) Concat(other *List[T]) {
-	l.ConcatSlice(other.ToSlice())
-}
-
-func (l *List[T]) ConcatSlice(other []T) {
-	l.slice = append(l.slice, other...)
-}
-
 func (l *List[T]) Insert(index int, values ...T) {
 	l.slice = slices.Insert(l.slice, index, values...)
+}
+
+func (l *List[T]) Append(values ...T) {
+	l.slice = append(l.slice, values...)
+}
+
+func (l *List[T]) Prepend(values ...T) {
+	l.slice = append(values, l.slice...)
 }
 
 func (l *List[T]) Remove(index int) {
@@ -63,6 +63,14 @@ func (l *List[T]) ReverseInPlace() {
 }
 
 // Non-mutative methods
+
+// Similar to Append but we leave the original slice untouched and return a new list
+func (l *List[T]) Concat(values ...T) *List[T] {
+	newSlice := make([]T, 0, len(l.slice)+len(values))
+	newSlice = append(newSlice, l.slice...)
+	newSlice = append(newSlice, values...)
+	return &List[T]{slice: newSlice}
+}
 
 func (l *List[T]) Filter(test func(value T) bool) *List[T] {
 	return NewFromSlice(Filter(l.slice, test))

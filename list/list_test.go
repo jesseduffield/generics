@@ -196,24 +196,7 @@ func TestMapInPlace(t *testing.T) {
 	}
 }
 
-func TestConcat(t *testing.T) {
-	tests := []struct {
-		startSlice []int
-		other      *List[int]
-		endSlice   []int
-	}{
-		{[]int{}, NewFromSlice([]int{}), []int{}},
-		{[]int{1}, NewFromSlice([]int{2}), []int{1, 2}},
-		{[]int{1, 2}, NewFromSlice([]int{3, 4}), []int{1, 2, 3, 4}},
-	}
-	for _, test := range tests {
-		list := NewFromSlice(test.startSlice)
-		list.Concat(test.other)
-		expectSlice(t, test.endSlice, list.ToSlice())
-	}
-}
-
-func TestConcatSlice(t *testing.T) {
+func TestAppend(t *testing.T) {
 	tests := []struct {
 		startSlice []int
 		other      []int
@@ -225,8 +208,44 @@ func TestConcatSlice(t *testing.T) {
 	}
 	for _, test := range tests {
 		list := NewFromSlice(test.startSlice)
-		list.ConcatSlice(test.other)
+		list.Append(test.other...)
 		expectSlice(t, test.endSlice, list.ToSlice())
+	}
+}
+
+func TestPrepend(t *testing.T) {
+	tests := []struct {
+		startSlice []int
+		other      []int
+		endSlice   []int
+	}{
+		{[]int{}, []int{}, []int{}},
+		{[]int{1}, []int{2}, []int{2, 1}},
+		{[]int{1, 2}, []int{3, 4}, []int{3, 4, 1, 2}},
+	}
+	for _, test := range tests {
+		list := NewFromSlice(test.startSlice)
+		list.Prepend(test.other...)
+		expectSlice(t, test.endSlice, list.ToSlice())
+	}
+}
+
+func TestConcat(t *testing.T) {
+	tests := []struct {
+		startSlice []int
+		other      []int
+		endSlice   []int
+	}{
+		{[]int{}, []int{}, []int{}},
+		{[]int{1}, []int{2}, []int{1, 2}},
+		{[]int{1, 2}, []int{3, 4}, []int{1, 2, 3, 4}},
+	}
+	for _, test := range tests {
+		originalSlice := cloneSlice(test.startSlice)
+		list := NewFromSlice(test.startSlice)
+		result := list.Concat(test.other...)
+		expectSlice(t, test.endSlice, result.ToSlice())
+		expectSlice(t, originalSlice, list.ToSlice())
 	}
 }
 
