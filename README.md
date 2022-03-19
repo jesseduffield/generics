@@ -13,13 +13,23 @@ Here are the newly added functions.
 ```go
 func Some[T any](slice []T, test func(T) bool) bool
 func Every[T any](slice []T, test func(T) bool) bool
+func ForEach[T any](slice []T, f func(T))
+func ForEachWithIndex[T any](slice []T, f func(T, int))
+func TryForEach[T any](slice []T, f func(T) error) error
+func TryForEachWithIndex[T any](slice []T, f func(T, int) error) error
 func Map[T any, V any](slice []T, f func(T) V) []V
 func MapWithIndex[T any, V any](slice []T, f func(T, int) V) []V
+func TryMap[T any, V any](slice []T, f func(T) (V, error)) ([]V, error)
+func TryMapWithIndex[T any, V any](slice []T, f func(T, int) (V, error)) ([]V, error)
 func MapInPlace[T any](slice []T, f func(T) T)
 func Filter[T any](slice []T, test func(T) bool) []T
 func FilterWithIndex[T any](slice []T, f func(T, int) bool) []T
+func TryFilter[T any](slice []T, test func(T) (bool, error)) ([]T, error)
+func TryFilterWithIndex[T any](slice []T, test func(T, int) (bool, error)) ([]T, error)
 func FilterInPlace[T any](slice []T, test func(T) bool) []T
 func FilterMap[T any, E any](slice []T, test func(T) (E, bool)) []E
+func TryFilterMap[T any, E any](slice []T, test func(T) (E, bool, error)) ([]E, error)
+func TryFilterMapWithIndex[T any, E any](slice []T, test func(T, int) (E, bool, error))
 func FlatMap[T any, V any](slice []T, f func(T) []V) []V
 func Flatten[T any](slice [][]T) []T
 func Find[T any](slice []T, f func(T) bool) (T, bool)
@@ -36,6 +46,8 @@ func Partition[T any](slice []T, test func(T) bool) ([]T, []T)
 func MaxBy[T any, V constraints.Ordered](slice []T, f func(T) V) V
 func MinBy[T any, V constraints.Ordered](slice []T, f func(T) V) V
 ```
+
+There's a good chance I'll have the Map/Filter functions take an index argument unconditionally and leave it to the user to omit that if they want. That will cut down on the number of functions here, but add some boilerplate. I'm currently comparing both approaches on a sizable repo to help decide.
 
 ## list package
 
