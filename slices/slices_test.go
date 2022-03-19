@@ -145,25 +145,15 @@ func TestFilterInPlace(t *testing.T) {
 	}
 }
 
-func TestFilterThenMap(t *testing.T) {
-	slice := []int{1, 2, 3, 4}
-	result := FilterThenMap(slice,
-		func(value int) bool { return value%2 == 0 },
-		func(value int) string { return strconv.Itoa(value * 2) },
-	)
-
-	testutils.ExpectSlice(t, []string{"4", "8"}, result)
-}
-
 func TestFilterMap(t *testing.T) {
 	slice := []int{1, 2, 3, 4}
 	result := FilterMap(slice,
-		func(value int) (bool, string) {
+		func(value int) (string, bool) {
 			if value%2 != 0 {
-				return false, ""
+				return "", false
 			}
 
-			return true, strconv.Itoa(value * 2)
+			return strconv.Itoa(value * 2), true
 		},
 	)
 

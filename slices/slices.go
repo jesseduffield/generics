@@ -125,26 +125,15 @@ func ReverseInPlace[T any](slice []T) {
 }
 
 // Produces a new slice, leaves the input slice untouched.
-func FilterMap[T any, E any](slice []T, test func(T) (bool, E)) []E {
+func FilterMap[T any, E any](slice []T, test func(T) (E, bool)) []E {
 	result := make([]E, 0, len(slice))
 	for _, element := range slice {
-		ok, mapped := test(element)
+		mapped, ok := test(element)
 		if ok {
 			result = append(result, mapped)
 		}
 	}
 
-	return result
-}
-
-// Produces a new slice, leaves the input slice untouched.
-func FilterThenMap[T any, E any](slice []T, test func(T) bool, mapFn func(T) E) []E {
-	result := make([]E, 0, len(slice))
-	for _, element := range slice {
-		if test(element) {
-			result = append(result, mapFn(element))
-		}
-	}
 	return result
 }
 
@@ -239,6 +228,15 @@ func MinBy[T any, V constraints.Ordered](slice []T, f func(T) V) V {
 		}
 	}
 	return min
+}
+
+func Find[T any](slice []T, f func(T) bool) (T, bool) {
+	for _, element := range slice {
+		if f(element) {
+			return element, true
+		}
+	}
+	return zero[T](), false
 }
 
 func zero[T any]() T {

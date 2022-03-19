@@ -14,13 +14,15 @@ Here are the newly added functions.
 func Some[T any](slice []T, test func(T) bool) bool
 func Every[T any](slice []T, test func(T) bool) bool
 func Map[T any, V any](slice []T, f func(T) V) []V
+func MapWithIndex[T any, V any](slice []T, f func(T, int) V) []V
 func MapInPlace[T any](slice []T, f func(T) T)
 func Filter[T any](slice []T, test func(T) bool) []T
+func FilterWithIndex[T any](slice []T, f func(T, int) bool) []T
 func FilterInPlace[T any](slice []T, test func(T) bool) []T
-func FilterMap[T any, E any](slice []T, test func(T) (bool, E)) []E
-func FilterThenMap[T any, E any](slice []T, test func(T) bool, mapFn func(T) E) []E
+func FilterMap[T any, E any](slice []T, test func(T) (E, bool)) []E
 func FlatMap[T any, V any](slice []T, f func(T) []V) []V
 func Flatten[T any](slice [][]T) []T
+func Find[T any](slice []T, f func(T) bool) (T, bool)
 func Reverse[T any](slice []T) []T
 func ReverseInPlace[T any](slice []T)
 func Prepend[T any](slice []T, values ...T) []T
