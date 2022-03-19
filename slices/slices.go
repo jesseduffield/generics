@@ -48,6 +48,14 @@ func FlatMap[T any, V any](slice []T, f func(T) []V) []V {
 	return result
 }
 
+func Flatten[T any](slice [][]T) []T {
+	result := make([]T, 0, len(slice))
+	for _, subSlice := range slice {
+		result = append(result, subSlice...)
+	}
+	return result
+}
+
 func MapInPlace[T any](slice []T, f func(T) T) {
 	for i, value := range slice {
 		slice[i] = f(value)

@@ -212,6 +212,22 @@ func TestFlatMap(t *testing.T) {
 	}
 }
 
+func TestFlatten(t *testing.T) {
+	tests := []struct {
+		startSlice [][]int
+		endSlice   []int
+	}{
+		{[][]int{}, []int{}},
+		{[][]int{{1}}, []int{1}},
+		{[][]int{{1, 2}, {3}}, []int{1, 2, 3}},
+		{[][]int{{1, 2}, {}, {3, 4}}, []int{1, 2, 3, 4}},
+	}
+
+	for _, test := range tests {
+		testutils.ExpectSlice(t, test.endSlice, Flatten(test.startSlice))
+	}
+}
+
 func TestMapInPlace(t *testing.T) {
 	double := func(value int) int { return value * 2 }
 	tests := []struct {

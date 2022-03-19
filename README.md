@@ -19,6 +19,8 @@ func Filter[T any](slice []T, test func(T) bool) []T
 func FilterInPlace[T any](slice []T, test func(T) bool) []T
 func FilterMap[T any, E any](slice []T, test func(T) (bool, E)) []E
 func FilterThenMap[T any, E any](slice []T, test func(T) bool, mapFn func(T) E) []E
+func FlatMap[T any, V any](slice []T, f func(T) []V) []V
+func Flatten[T any](slice [][]T) []T
 func Reverse[T any](slice []T) []T
 func ReverseInPlace[T any](slice []T)
 func Prepend[T any](slice []T, values ...T) []T
