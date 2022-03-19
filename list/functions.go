@@ -71,12 +71,24 @@ func ReverseInPlace[T any](slice []T) {
 	}
 }
 
-func FilterMap[T any, E any](slice []T, test func(T) bool, mapFn func(T) E) []E {
+func FilterThenMap[T any, E any](slice []T, test func(T) bool, mapFn func(T) E) []E {
 	result := make([]E, 0, len(slice))
 	for _, element := range slice {
 		if test(element) {
 			result = append(result, mapFn(element))
 		}
 	}
+	return result
+}
+
+func FilterMap[T any, E any](slice []T, test func(T) (bool, E)) []E {
+	result := make([]E, 0, len(slice))
+	for _, element := range slice {
+		ok, mapped := test(element)
+		if ok {
+			result = append(result, mapped)
+		}
+	}
+
 	return result
 }

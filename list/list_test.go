@@ -339,7 +339,7 @@ func TestClone(t *testing.T) {
 	expectSlice(t, []int{1, 2, 3}, list.ToSlice())
 }
 
-func TestFilterThenMap(t *testing.T) {
+func TestListFilterAndMap(t *testing.T) {
 	list := NewFromSlice([]int{1, 2, 3, 4})
 	result := list.
 		Filter(func(value int) bool { return value%2 == 0 }).
@@ -385,11 +385,26 @@ func TestGet(t *testing.T) {
 	}
 }
 
+func TestFilterThenMap(t *testing.T) {
+	slice := []int{1, 2, 3, 4}
+	result := FilterThenMap(slice,
+		func(value int) bool { return value%2 == 0 },
+		func(value int) string { return strconv.Itoa(value * 2) },
+	)
+
+	expectSlice(t, []string{"4", "8"}, result)
+}
+
 func TestFilterMap(t *testing.T) {
 	slice := []int{1, 2, 3, 4}
 	result := FilterMap(slice,
-		func(value int) bool { return value%2 == 0 },
-		func(value int) string { return strconv.Itoa(value * 2) },
+		func(value int) (bool, string) {
+			if value%2 != 0 {
+				return false, ""
+			}
+
+			return true, strconv.Itoa(value * 2)
+		},
 	)
 
 	expectSlice(t, []string{"4", "8"}, result)
