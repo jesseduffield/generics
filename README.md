@@ -6,6 +6,8 @@ This is a repo for some helper methods/structs that involve generics (added in G
 
 This package contains all the functions in the official slices [package](https://pkg.go.dev/golang.org/x/exp/slices#Insert) but adds extra functions as well, resulting in a superset of the official API. Any official functions are just forwarded to the official implementations. This allows you to use this package wherever you would otherwise use the official slices package.
 
+As the official slices package evolves, so too will this package. If a function is added that does basically the same thing as a function from this package, we'll replace our function for the official function.
+
 Here are the newly added functions.
 
 ```go
