@@ -191,6 +191,27 @@ func TestMap(t *testing.T) {
 	}
 }
 
+func TestFlatMap(t *testing.T) {
+	f := func(value int) []int { return []int{value * 2, value * 4} }
+	tests := []struct {
+		startSlice []int
+		mapFunc    func(value int) []int
+		endSlice   []int
+	}{
+		{[]int{}, f, []int{}},
+		{[]int{1}, f, []int{2, 4}},
+		{[]int{1, 2}, f, []int{2, 4, 4, 8}},
+		{[]int{1, 2, 3}, f, []int{2, 4, 4, 8, 6, 12}},
+		{[]int{1, 2, 3, 4}, f, []int{2, 4, 4, 8, 6, 12, 8, 16}},
+	}
+
+	for _, test := range tests {
+		testSlice := slices.Clone(test.startSlice)
+		testutils.ExpectSlice(t, test.endSlice, FlatMap(testSlice, test.mapFunc))
+		testutils.ExpectSlice(t, test.startSlice, testSlice)
+	}
+}
+
 func TestMapInPlace(t *testing.T) {
 	double := func(value int) int { return value * 2 }
 	tests := []struct {

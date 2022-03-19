@@ -28,9 +28,21 @@ func Every[T any](slice []T, test func(T) bool) bool {
 
 // Produces a new slice, leaves the input slice untouched.
 func Map[T any, V any](slice []T, f func(T) V) []V {
-	result := make([]V, len(slice))
-	for i, value := range slice {
-		result[i] = f(value)
+	result := make([]V, 0, len(slice))
+	for _, value := range slice {
+		result = append(result, f(value))
+	}
+
+	return result
+}
+
+// Produces a new slice, leaves the input slice untouched.
+func FlatMap[T any, V any](slice []T, f func(T) []V) []V {
+	// impossible to know how long this slice will be in the end but the length
+	// of the original slice is the lower bound
+	result := make([]V, 0, len(slice))
+	for _, value := range slice {
+		result = append(result, f(value)...)
 	}
 
 	return result
