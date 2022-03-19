@@ -1,6 +1,7 @@
 package slices
 
 import (
+	"golang.org/x/exp/constraints"
 	"golang.org/x/exp/slices"
 )
 
@@ -186,4 +187,39 @@ func Partition[T any](slice []T, test func(T) bool) ([]T, []T) {
 	}
 
 	return left, right
+}
+
+func MaxBy[T any, V constraints.Ordered](slice []T, f func(T) V) V {
+	if len(slice) == 0 {
+		return zero[V]()
+	}
+
+	max := f(slice[0])
+	for _, element := range slice[1:] {
+		value := f(element)
+		if value > max {
+			max = value
+		}
+	}
+	return max
+}
+
+func MinBy[T any, V constraints.Ordered](slice []T, f func(T) V) V {
+	if len(slice) == 0 {
+		return zero[V]()
+	}
+
+	min := f(slice[0])
+	for _, element := range slice[1:] {
+		value := f(element)
+		if value < min {
+			min = value
+		}
+	}
+	return min
+}
+
+func zero[T any]() T {
+	var value T
+	return value
 }

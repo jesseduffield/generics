@@ -31,6 +31,8 @@ func ContainsFunc[T any](slice []T, f func(T) bool) bool
 func Pop[T any](slice []T) (T, []T)
 func Shift[T any](slice []T) (T, []T)
 func Partition[T any](slice []T, test func(T) bool) ([]T, []T)
+func MaxBy[T any, V constraints.Ordered](slice []T, f func(T) V) V
+func MinBy[T any, V constraints.Ordered](slice []T, f func(T) V) V
 ```
 
 ## list package

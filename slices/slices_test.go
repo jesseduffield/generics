@@ -538,3 +538,43 @@ func TestPartition(t *testing.T) {
 		testutils.ExpectSlice(t, testSlice, test.startSlice)
 	}
 }
+
+func TestMaxBy(t *testing.T) {
+	tests := []struct {
+		slice    []int
+		f        func(value int) int
+		expected int
+	}{
+		{[]int{}, func(value int) int { return value }, 0},
+		{[]int{1}, func(value int) int { return value }, 1},
+		{[]int{-1}, func(value int) int { return value }, -1},
+		{[]int{1, 2}, func(value int) int { return value }, 2},
+		{[]int{3, 1, 2, 3}, func(value int) int { return value }, 3},
+		{[]int{1, 2, 2, 3, 4}, func(value int) int { return value }, 4},
+	}
+	for _, test := range tests {
+		if MaxBy(test.slice, test.f) != test.expected {
+			t.Errorf("MaxBy(%v, func) = %v, expected %v", test.slice, MaxBy(test.slice, test.f), test.expected)
+		}
+	}
+}
+
+func TestMinBy(t *testing.T) {
+	tests := []struct {
+		slice    []int
+		f        func(value int) int
+		expected int
+	}{
+		{[]int{}, func(value int) int { return value }, 0},
+		{[]int{1}, func(value int) int { return value }, 1},
+		{[]int{-1}, func(value int) int { return value }, -1},
+		{[]int{3, 1, 2}, func(value int) int { return value }, 1},
+		{[]int{1, 2, 3}, func(value int) int { return value }, 1},
+		{[]int{1, 2, 3, 4}, func(value int) int { return value }, 1},
+	}
+	for _, test := range tests {
+		if MinBy(test.slice, test.f) != test.expected {
+			t.Errorf("MinBy(%v, func) = %v, expected %v", test.slice, MinBy(test.slice, test.f), test.expected)
+		}
+	}
+}
