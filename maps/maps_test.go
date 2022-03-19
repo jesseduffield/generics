@@ -1,6 +1,7 @@
 package maps
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/jesseduffield/generics/internal/testutils"
@@ -73,5 +74,59 @@ func TestTransformValues(t *testing.T) {
 	}
 	for _, test := range tests {
 		testutils.ExpectMap(t, test.expected, TransformValues(test.hashMap, test.transform))
+	}
+}
+
+func TestMapToSlice(t *testing.T) {
+	tests := []struct {
+		hashMap  map[int64]int
+		f        func(int64, int) string
+		expected []string
+	}{
+		{
+			hashMap:  map[int64]int{},
+			f:        func(k int64, v int) string { return fmt.Sprintf("%d:%d", k, v) },
+			expected: []string{},
+		},
+		{
+			hashMap:  map[int64]int{2: 5},
+			f:        func(k int64, v int) string { return fmt.Sprintf("%d:%d", k, v) },
+			expected: []string{"2:5"},
+		},
+		{
+			hashMap:  map[int64]int{2: 5, 3: 4},
+			f:        func(k int64, v int) string { return fmt.Sprintf("%d:%d", k, v) },
+			expected: []string{"2:5", "3:4"},
+		},
+	}
+	for _, test := range tests {
+		testutils.ExpectSlice(t, test.expected, MapToSlice(test.hashMap, test.f))
+	}
+}
+
+func TestFilter(t *testing.T) {
+	tests := []struct {
+		hashMap  map[int64]int
+		f        func(int64, int) bool
+		expected map[int64]int
+	}{
+		{
+			hashMap:  map[int64]int{},
+			f:        func(k int64, v int) bool { return int(k)+v > 0 },
+			expected: map[int64]int{},
+		},
+		{
+			hashMap:  map[int64]int{2: 5},
+			f:        func(k int64, v int) bool { return int(k)+v > 0 },
+			expected: map[int64]int{2: 5},
+		},
+		{
+			hashMap:  map[int64]int{2: 5, 3: -4},
+			f:        func(k int64, v int) bool { return int(k)+v > 0 },
+			expected: map[int64]int{2: 5},
+		},
+	}
+	for _, test := range tests {
+		testutils.ExpectMap(t, test.expected, Filter(test.hashMap, test.f))
 	}
 }

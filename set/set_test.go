@@ -16,7 +16,7 @@ func TestAddIncludes(t *testing.T) {
 
 func TestAddSliceIncludes(t *testing.T) {
 	set := New[int]()
-	set.AddSlice([]int{1, 2})
+	set.Add(1, 2)
 	if !set.Includes(1) {
 		t.Errorf("AddSlice failed: Includes(1) returned false")
 	}

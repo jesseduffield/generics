@@ -56,6 +56,8 @@ func Keys[Key comparable, Value any](m map[Key]Value) []Key
 func Values[Key comparable, Value any](m map[Key]Value) []Value
 func TransformValues[Key comparable, Value any, NewValue any
 func TransformKeys[Key comparable, Value any, NewKey comparable](m map[Key]Value, fn func(Key) NewKey) map[NewKey]Value
+func MapToSlice[Key comparable, Value any, Mapped any](m map[Key]Value, f func(Key, Value) Mapped) []Mapped
+func Filter[Key comparable, Value any](m map[Key]Value, f func(Key, Value) bool) map[Key]Value
 ```
 
 ## Alternatives
