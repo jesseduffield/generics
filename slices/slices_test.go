@@ -191,6 +191,48 @@ func TestMap(t *testing.T) {
 	}
 }
 
+func TestMapWithIndex(t *testing.T) {
+	double := func(value int, i int) int { return value*2 + i }
+	tests := []struct {
+		startSlice []int
+		mapFunc    func(value int, i int) int
+		endSlice   []int
+	}{
+		{[]int{}, double, []int{}},
+		{[]int{1}, double, []int{2}},
+		{[]int{1, 2}, double, []int{2, 5}},
+		{[]int{1, 2, 3}, double, []int{2, 5, 8}},
+		{[]int{1, 2, 3, 4}, double, []int{2, 5, 8, 11}},
+	}
+
+	for _, test := range tests {
+		testSlice := slices.Clone(test.startSlice)
+		testutils.ExpectSlice(t, test.endSlice, MapWithIndex(testSlice, test.mapFunc))
+		testutils.ExpectSlice(t, test.startSlice, testSlice)
+	}
+}
+
+func TestFilterWithIndex(t *testing.T) {
+	double := func(value int, i int) bool { return (value*2+i)%2 == 0 }
+	tests := []struct {
+		startSlice []int
+		mapFunc    func(value int, i int) bool
+		endSlice   []int
+	}{
+		{[]int{}, double, []int{}},
+		{[]int{1}, double, []int{1}},
+		{[]int{1, 2}, double, []int{1}},
+		{[]int{1, 2, 3}, double, []int{1, 3}},
+		{[]int{1, 2, 3, 4}, double, []int{1, 3}},
+	}
+
+	for _, test := range tests {
+		testSlice := slices.Clone(test.startSlice)
+		testutils.ExpectSlice(t, test.endSlice, FilterWithIndex(testSlice, test.mapFunc))
+		testutils.ExpectSlice(t, test.startSlice, testSlice)
+	}
+}
+
 func TestFlatMap(t *testing.T) {
 	f := func(value int) []int { return []int{value * 2, value * 4} }
 	tests := []struct {
