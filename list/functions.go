@@ -70,3 +70,13 @@ func ReverseInPlace[T any](slice []T) {
 		slice[i], slice[j] = slice[j], slice[i]
 	}
 }
+
+func FilterMap[T any, E any](slice []T, test func(T) bool, mapFn func(T) E) []E {
+	result := make([]E, 0, len(slice))
+	for _, element := range slice {
+		if test(element) {
+			result = append(result, mapFn(element))
+		}
+	}
+	return result
+}

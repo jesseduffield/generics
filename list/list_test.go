@@ -1,6 +1,7 @@
 package list
 
 import (
+	"strconv"
 	"testing"
 )
 
@@ -338,7 +339,7 @@ func TestClone(t *testing.T) {
 	expectSlice(t, []int{1, 2, 3}, list.ToSlice())
 }
 
-func TestFilterMap(t *testing.T) {
+func TestFilterThenMap(t *testing.T) {
 	list := NewFromSlice([]int{1, 2, 3, 4})
 	result := list.
 		Filter(func(value int) bool { return value%2 == 0 }).
@@ -369,4 +370,27 @@ func TestLen(t *testing.T) {
 	if list.Len() != 1 {
 		t.Errorf("Len() = %v, expected %v", list.Len(), 1)
 	}
+}
+
+func TestGet(t *testing.T) {
+	list := NewFromSlice([]int{1, 2, 3})
+	if list.Get(0) != 1 {
+		t.Errorf("Get(0) = %v, expected %v", list.Get(0), 1)
+	}
+	if list.Get(1) != 2 {
+		t.Errorf("Get(1) = %v, expected %v", list.Get(1), 2)
+	}
+	if list.Get(2) != 3 {
+		t.Errorf("Get(2) = %v, expected %v", list.Get(2), 3)
+	}
+}
+
+func TestFilterMap(t *testing.T) {
+	slice := []int{1, 2, 3, 4}
+	result := FilterMap(slice,
+		func(value int) bool { return value%2 == 0 },
+		func(value int) string { return strconv.Itoa(value * 2) },
+	)
+
+	expectSlice(t, []string{"4", "8"}, result)
 }

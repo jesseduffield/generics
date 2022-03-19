@@ -115,3 +115,7 @@ func (l *List[T]) IsEmpty() bool {
 func (l *List[T]) Len() int {
 	return len(l.slice)
 }
+
+func (l *List[T]) Get(index int) T {
+	return l.slice[index]
+}
