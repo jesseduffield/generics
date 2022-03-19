@@ -2,6 +2,8 @@ package list
 
 import (
 	"testing"
+
+	"github.com/jesseduffield/generics/internal/testutils"
 )
 
 func TestEqual(t *testing.T) {
@@ -43,7 +45,7 @@ func TestCompact(t *testing.T) {
 	for _, test := range tests {
 		list := NewComparableFromSlice(test.slice)
 		list.Compact()
-		expectSlice(t, test.expected, list.ToSlice())
+		testutils.ExpectSlice(t, test.expected, list.ToSlice())
 	}
 }
 

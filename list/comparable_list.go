@@ -1,7 +1,7 @@
 package list
 
 import (
-	"golang.org/x/exp/slices"
+	"github.com/jesseduffield/generics/slices"
 )
 
 type ComparableList[T comparable] struct {
@@ -36,14 +36,7 @@ func (l *ComparableList[T]) Contains(needle T) bool {
 	return slices.Contains(l.slice, needle)
 }
 
-func (l *ComparableList[T]) SortFuncInPlace(test func(a T, b T) bool) {
+// Sorts in-place
+func (l *ComparableList[T]) SortFunc(test func(a T, b T) bool) {
 	slices.SortFunc(l.slice, test)
-}
-
-func (l *ComparableList[T]) SortFunc(test func(a T, b T) bool) *ComparableList[T] {
-	newSlice := slices.Clone(l.slice)
-
-	slices.SortFunc(newSlice, test)
-
-	return NewComparableFromSlice(newSlice)
 }

@@ -1,34 +1,10 @@
-package hashmap
+package maps
 
-import "testing"
+import (
+	"testing"
 
-// duplicating this for now to spare the need for having a separate test utils package
-func expectSlice[T comparable](t *testing.T, expected []T, actual []T) {
-	if len(expected) != len(actual) {
-		t.Errorf("Expected slice %v, got %v", expected, actual)
-		return
-	}
-	for i := range expected {
-		if expected[i] != actual[i] {
-			t.Errorf("Expected slice %v, got %v", expected, actual)
-			return
-		}
-	}
-}
-
-// duplicating this for now to spare the need for having a separate test utils package
-func expectMap[T comparable, V comparable](t *testing.T, expected map[T]V, actual map[T]V) {
-	if len(expected) != len(actual) {
-		t.Errorf("Expected map %v, got %v", expected, actual)
-		return
-	}
-	for key := range expected {
-		if expected[key] != actual[key] {
-			t.Errorf("Expected map %v, got %v", expected, actual)
-			return
-		}
-	}
-}
+	"github.com/jesseduffield/generics/internal/testutils"
+)
 
 func TestKeys(t *testing.T) {
 	tests := []struct {
@@ -39,7 +15,7 @@ func TestKeys(t *testing.T) {
 		{map[string]int{"a": 1}, []string{"a"}},
 	}
 	for _, test := range tests {
-		expectSlice(t, test.expected, Keys(test.hashMap))
+		testutils.ExpectSlice(t, test.expected, Keys(test.hashMap))
 	}
 }
 
@@ -52,7 +28,7 @@ func TestValues(t *testing.T) {
 		{map[string]int{"a": 1}, []int{1}},
 	}
 	for _, test := range tests {
-		expectSlice(t, test.expected, Values(test.hashMap))
+		testutils.ExpectSlice(t, test.expected, Values(test.hashMap))
 	}
 }
 
@@ -74,7 +50,7 @@ func TestTransformKeys(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		expectMap(t, test.expected, TransformKeys(test.hashMap, test.transform))
+		testutils.ExpectMap(t, test.expected, TransformKeys(test.hashMap, test.transform))
 	}
 }
 
@@ -96,6 +72,6 @@ func TestTransformValues(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		expectMap(t, test.expected, TransformValues(test.hashMap, test.transform))
+		testutils.ExpectMap(t, test.expected, TransformValues(test.hashMap, test.transform))
 	}
 }

@@ -1,8 +1,10 @@
 package list
 
-import (
-	"golang.org/x/exp/slices"
-)
+import "github.com/jesseduffield/generics/slices"
+
+// List is a struct which wraps a slice and provides convenience methods for it.
+// Unfortunately due to some limitations in Go's type system, certain methods
+// are not available e.g. Map.
 
 type List[T any] struct {
 	slice []T
@@ -26,8 +28,10 @@ func (l *List[T]) Push(v T) {
 	l.slice = append(l.slice, v)
 }
 
-func (l *List[T]) Pop() {
-	l.slice = l.slice[0 : len(l.slice)-1]
+func (l *List[T]) Pop() T {
+	var value T
+	value, l.slice = slices.Pop(l.slice)
+	return value
 }
 
 func (l *List[T]) Insert(index int, values ...T) {
@@ -51,29 +55,26 @@ func (l *List[T]) Delete(from int, to int) {
 }
 
 func (l *List[T]) FilterInPlace(test func(value T) bool) {
-	l.slice = FilterInPlace(l.slice, test)
+	l.slice = slices.FilterInPlace(l.slice, test)
 }
 
 func (l *List[T]) MapInPlace(f func(value T) T) {
-	MapInPlace(l.slice, f)
+	slices.MapInPlace(l.slice, f)
 }
 
 func (l *List[T]) ReverseInPlace() {
-	ReverseInPlace(l.slice)
+	slices.ReverseInPlace(l.slice)
 }
 
 // Non-mutative methods
 
 // Similar to Append but we leave the original slice untouched and return a new list
 func (l *List[T]) Concat(values ...T) *List[T] {
-	newSlice := make([]T, 0, len(l.slice)+len(values))
-	newSlice = append(newSlice, l.slice...)
-	newSlice = append(newSlice, values...)
-	return &List[T]{slice: newSlice}
+	return NewFromSlice(slices.Concat(l.slice, values...))
 }
 
 func (l *List[T]) Filter(test func(value T) bool) *List[T] {
-	return NewFromSlice(Filter(l.slice, test))
+	return NewFromSlice(slices.Filter(l.slice, test))
 }
 
 // Unfortunately this does not support mapping from one type to another
@@ -81,7 +82,7 @@ func (l *List[T]) Filter(test func(value T) bool) *List[T] {
 // type parameters. For that functionality you'll need to use the standalone
 // Map function instead
 func (l *List[T]) Map(f func(value T) T) *List[T] {
-	return NewFromSlice(Map(l.slice, f))
+	return NewFromSlice(slices.Map(l.slice, f))
 }
 
 func (l *List[T]) Clone() *List[T] {
@@ -89,11 +90,11 @@ func (l *List[T]) Clone() *List[T] {
 }
 
 func (l *List[T]) Some(test func(value T) bool) bool {
-	return Some(l.slice, test)
+	return slices.Some(l.slice, test)
 }
 
 func (l *List[T]) Every(test func(value T) bool) bool {
-	return Every(l.slice, test)
+	return slices.Every(l.slice, test)
 }
 
 func (l *List[T]) IndexFunc(f func(T) bool) int {
@@ -101,11 +102,11 @@ func (l *List[T]) IndexFunc(f func(T) bool) int {
 }
 
 func (l *List[T]) ContainsFunc(f func(T) bool) bool {
-	return l.IndexFunc(f) != -1
+	return slices.ContainsFunc(l.slice, f)
 }
 
 func (l *List[T]) Reverse() *List[T] {
-	return NewFromSlice(Reverse(l.slice))
+	return NewFromSlice(slices.Reverse(l.slice))
 }
 
 func (l *List[T]) IsEmpty() bool {

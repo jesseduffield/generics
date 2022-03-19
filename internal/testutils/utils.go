@@ -1,8 +1,10 @@
-package list
+package testutils
 
 import "testing"
 
-func expectSlice[T comparable](t *testing.T, expected []T, actual []T) {
+func ExpectSlice[T comparable](t *testing.T, expected []T, actual []T) {
+	t.Helper()
+
 	if len(expected) != len(actual) {
 		t.Errorf("Expected slice %v, got %v", expected, actual)
 		return
@@ -15,7 +17,9 @@ func expectSlice[T comparable](t *testing.T, expected []T, actual []T) {
 	}
 }
 
-func expectMap[T comparable, V comparable](t *testing.T, expected map[T]V, actual map[T]V) {
+func ExpectMap[T comparable, V comparable](t *testing.T, expected map[T]V, actual map[T]V) {
+	t.Helper()
+
 	if len(expected) != len(actual) {
 		t.Errorf("Expected map %v, got %v", expected, actual)
 		return
@@ -28,7 +32,9 @@ func expectMap[T comparable, V comparable](t *testing.T, expected map[T]V, actua
 	}
 }
 
-func expectError(t *testing.T, err error, expected string) {
+func ExpectError(t *testing.T, err error, expected string) {
+	t.Helper()
+
 	if err == nil {
 		t.Errorf("Expected error, got nil")
 		return
@@ -39,20 +45,18 @@ func expectError(t *testing.T, err error, expected string) {
 	}
 }
 
-func expectNilError(t *testing.T, err error) {
+func ExpectNilError(t *testing.T, err error) {
+	t.Helper()
+
 	if err != nil {
 		t.Errorf("Expected nil error, got %v", err)
 	}
 }
 
-func expectPanic(t *testing.T) {
+func ExpectPanic(t *testing.T) {
+	t.Helper()
+
 	if r := recover(); r == nil {
 		t.Errorf("The code did not panic")
 	}
-}
-
-func cloneSlice(slice []int) []int {
-	clone := make([]int, len(slice))
-	copy(clone, slice)
-	return clone
 }
