@@ -30,6 +30,7 @@ func Concat[T any](slice []T, values ...T) []T
 func ContainsFunc[T any](slice []T, f func(T) bool) bool
 func Pop[T any](slice []T) (T, []T)
 func Shift[T any](slice []T) (T, []T)
+func Partition[T any](slice []T, test func(T) bool) ([]T, []T)
 ```
 
 ## list package

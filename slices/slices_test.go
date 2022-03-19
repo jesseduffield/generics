@@ -516,3 +516,25 @@ func TestShift(t *testing.T) {
 		testutils.ExpectSlice(t, test.expectedSlice, slice)
 	}
 }
+
+func TestPartition(t *testing.T) {
+	even := func(value int) bool { return value%2 == 0 }
+	tests := []struct {
+		startSlice    []int
+		testFunc      func(value int) bool
+		endSliceLeft  []int
+		endSliceRight []int
+	}{
+		{[]int{1}, even, []int{}, []int{1}},
+		{[]int{1, 2}, even, []int{2}, []int{1}},
+		{[]int{1, 2, 3}, even, []int{2}, []int{1, 3}},
+		{[]int{1, 2, 3, 4}, even, []int{2, 4}, []int{1, 3}},
+	}
+	for _, test := range tests {
+		testSlice := slices.Clone(test.startSlice)
+		left, right := Partition(testSlice, test.testFunc)
+		testutils.ExpectSlice(t, test.endSliceLeft, left)
+		testutils.ExpectSlice(t, test.endSliceRight, right)
+		testutils.ExpectSlice(t, testSlice, test.startSlice)
+	}
+}

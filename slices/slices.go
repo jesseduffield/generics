@@ -172,3 +172,18 @@ func Shift[T any](slice []T) (T, []T) {
 	slice = slice[1:]
 	return value, slice
 }
+
+func Partition[T any](slice []T, test func(T) bool) ([]T, []T) {
+	left := make([]T, 0, len(slice))
+	right := make([]T, 0, len(slice))
+
+	for _, value := range slice {
+		if test(value) {
+			left = append(left, value)
+		} else {
+			right = append(right, value)
+		}
+	}
+
+	return left, right
+}
