@@ -406,9 +406,87 @@ func TestClone(t *testing.T) {
 }
 
 func TestMove(t *testing.T) {
-	slice := []int{1, 2, 3, 4}
-	slice = Move(slice, 2, 1)
-	testutils.ExpectSlice(t, []int{1, 3, 2, 4}, slice)
+	tests := []struct {
+		startSlice []int
+		from       int
+		to         int
+		endSlice   []int
+	}{
+		{
+			startSlice: []int{1, 2, 3},
+			from:       0,
+			to:         1,
+			endSlice:   []int{2, 1, 3},
+		},
+		{
+			startSlice: []int{1, 2, 3, 4},
+			from:       2,
+			to:         1,
+			endSlice:   []int{1, 3, 2, 4},
+		},
+		{
+			startSlice: []int{1, 2, 3},
+			from:       1,
+			to:         0,
+			endSlice:   []int{2, 1, 3},
+		},
+		{
+			startSlice: []int{1, 2, 3, 4},
+			from:       0,
+			to:         3,
+			endSlice:   []int{2, 3, 4, 1},
+		},
+	}
+
+	for _, test := range tests {
+		result := Move(test.startSlice, test.from, test.to)
+		testutils.ExpectSlice(t, test.endSlice, result)
+	}
+}
+
+func TestSwap(t *testing.T) {
+	tests := []struct {
+		startSlice []int
+		from       int
+		to         int
+		endSlice   []int
+	}{
+		{
+			startSlice: []int{1, 2, 3},
+			from:       0,
+			to:         1,
+			endSlice:   []int{2, 1, 3},
+		},
+		{
+			startSlice: []int{1, 2, 3, 4},
+			from:       2,
+			to:         1,
+			endSlice:   []int{1, 3, 2, 4},
+		},
+		{
+			startSlice: []int{1, 2, 3},
+			from:       1,
+			to:         0,
+			endSlice:   []int{2, 1, 3},
+		},
+		{
+			startSlice: []int{1, 2, 3, 4},
+			from:       0,
+			to:         3,
+			endSlice:   []int{4, 2, 3, 1},
+		},
+		{
+			startSlice: []int{1, 2, 3, 4},
+			from:       3,
+			to:         0,
+			endSlice:   []int{4, 2, 3, 1},
+		},
+	}
+
+	for _, test := range tests {
+		Swap(test.startSlice, test.from, test.to)
+		testutils.ExpectSlice(t, test.endSlice, test.startSlice)
+	}
 }
 
 func TestEqual(t *testing.T) {
@@ -607,6 +685,39 @@ func TestMinBy(t *testing.T) {
 	for _, test := range tests {
 		if MinBy(test.slice, test.f) != test.expected {
 			t.Errorf("MinBy(%v, func) = %v, expected %v", test.slice, MinBy(test.slice, test.f), test.expected)
+		}
+	}
+}
+
+func TestSumInt(t *testing.T) {
+	tests := []struct {
+		slice    []int
+		expected int
+	}{
+		{[]int{}, 0},
+		{[]int{1}, 1},
+		{[]int{1, 2}, 3},
+		{[]int{1, 2, 3}, 6},
+	}
+	for _, test := range tests {
+		if Sum(test.slice) != test.expected {
+			t.Errorf("Sum(%v) = %v, expected %v", test.slice, Sum(test.slice), test.expected)
+		}
+	}
+}
+
+func TestSumString(t *testing.T) {
+	tests := []struct {
+		slice    []string
+		expected string
+	}{
+		{[]string{}, ""},
+		{[]string{"a"}, "a"},
+		{[]string{"a", "b"}, "ab"},
+	}
+	for _, test := range tests {
+		if Sum(test.slice) != test.expected {
+			t.Errorf("Sum(%v) = %v, expected %v", test.slice, Sum(test.slice), test.expected)
 		}
 	}
 }

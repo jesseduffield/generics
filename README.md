@@ -39,6 +39,7 @@ func ReverseInPlace[T any](slice []T)
 func Prepend[T any](slice []T, values ...T) []T
 func Remove[T any](slice []T, index int) []T
 func Move[T any](slice []T, fromIndex int, toIndex int) []T
+func Swap[T any](slice []T, index1 int, index2 int)
 func Concat[T any](slice []T, values ...T) []T
 func ContainsFunc[T any](slice []T, f func(T) bool) bool
 func Pop[T any](slice []T) (T, []T)
