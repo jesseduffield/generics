@@ -346,6 +346,17 @@ func Find[T any](slice []T, f func(T) bool) (T, bool) {
 	return zero[T](), false
 }
 
+// Sometimes you need to find an element and then map it to some other value based on
+// information you obtained while finding it. This function lets you do that
+func FindMap[T any, V any](slice []T, f func(T) (V, bool)) (V, bool) {
+	for _, element := range slice {
+		if value, ok := f(element); ok {
+			return value, true
+		}
+	}
+	return zero[V](), false
+}
+
 func ForEach[T any](slice []T, f func(T)) {
 	for _, element := range slice {
 		f(element)

@@ -33,6 +33,7 @@ func TryFilterMapWithIndex[T any, E any](slice []T, test func(T, int) (E, bool, 
 func FlatMap[T any, V any](slice []T, f func(T) []V) []V
 func Flatten[T any](slice [][]T) []T
 func Find[T any](slice []T, f func(T) bool) (T, bool)
+func FindMap[T any, V any](slice []T, f func(T) (V, bool)) (V, bool)
 func Reverse[T any](slice []T) []T
 func ReverseInPlace[T any](slice []T)
 func Prepend[T any](slice []T, values ...T) []T
