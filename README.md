@@ -65,6 +65,7 @@ AddSlice(slice []T)
 Remove(value T)
 RemoveSlice(slice []T)
 Includes(value T) bool
+Len() int
 ToSlice() []T
 ```
 

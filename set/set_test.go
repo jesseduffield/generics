@@ -73,6 +73,18 @@ func TestNewFromSlice(t *testing.T) {
 	}
 }
 
+func TestLen(t *testing.T) {
+	set := NewFromSlice([]int{})
+	if set.Len() != 0 {
+		t.Errorf("Len() = %v, expected %v", set.Len(), 0)
+	}
+
+	set = NewFromSlice([]int{1})
+	if set.Len() != 1 {
+		t.Errorf("Len() = %v, expected %v", set.Len(), 1)
+	}
+}
+
 func TestToSlice(t *testing.T) {
 	set := New[int]()
 	set.Add(1)
