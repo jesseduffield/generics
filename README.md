@@ -69,6 +69,23 @@ Len() int
 ToSlice() []T
 ```
 
+## orderedset package
+
+This package provides an OrderedSet struct with the following methods:
+
+```go
+Add(values ...T)
+AddSlice(slice []T)
+Remove(value T)
+RemoveSlice(slice []T)
+Includes(value T) bool
+Len() int
+ToSliceFromOldest() []T
+ToSliceFromNewest() []T
+```
+
+The difference to Set is that the insertion order of the values is preserved.
+
 ## maps package
 
 Provides some helper methods for maps:
