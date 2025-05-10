@@ -112,7 +112,7 @@ func MapInPlace[T any](slice []T, f func(T) T) {
 
 // Produces a new slice, leaves the input slice untouched.
 func Filter[T any](slice []T, test func(T) bool) []T {
-	result := make([]T, 0)
+	result := make([]T, 0, len(slice))
 	for _, element := range slice {
 		if test(element) {
 			result = append(result, element)
@@ -134,7 +134,7 @@ func FilterWithIndex[T any](slice []T, f func(T, int) bool) []T {
 }
 
 func TryFilter[T any](slice []T, test func(T) (bool, error)) ([]T, error) {
-	result := make([]T, 0)
+	result := make([]T, 0, len(slice))
 	for _, element := range slice {
 		ok, err := test(element)
 		if err != nil {
@@ -148,7 +148,7 @@ func TryFilter[T any](slice []T, test func(T) (bool, error)) ([]T, error) {
 }
 
 func TryFilterWithIndex[T any](slice []T, test func(T, int) (bool, error)) ([]T, error) {
-	result := make([]T, 0)
+	result := make([]T, 0, len(slice))
 	for i, element := range slice {
 		ok, err := test(element, i)
 		if err != nil {
